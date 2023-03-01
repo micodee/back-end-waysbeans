@@ -1,9 +1,9 @@
 package main
 
 import (
-	"backEnd/database"
-	"backEnd/pkg/mysql"
-	"backEnd/routes"
+	"waysbeans/database"
+	"waysbeans/pkg/mysql"
+	"waysbeans/routes"
 	"fmt"
 
 	"github.com/labstack/echo/v4"

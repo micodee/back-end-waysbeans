@@ -1,8 +1,8 @@
 package database
 
 import (
-	"backEnd/models"
-	"backEnd/pkg/mysql"
+	"waysbeans/models"
+	"waysbeans/pkg/mysql"
 	"fmt"
 )
 
