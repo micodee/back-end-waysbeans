@@ -109,6 +109,22 @@ func (h *productControl) UpdateProduct(c echo.Context) error {
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
 }
 
+func (h *productControl) DeleteProduct(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	user, err := h.ProductRepository.GetProducts(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	}
+
+	data, err := h.ProductRepository.DeleteProduct(user, id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
+}
+
 func convProduct(u models.Product) dto.ProductResponse {
 	return dto.ProductResponse{
 		ID:          u.ID,
