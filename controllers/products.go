@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"waysbeans/dto"
@@ -19,8 +20,6 @@ type productControl struct {
 func ControlProduct(ProductRepository repositories.ProductRepository) *productControl {
 	return &productControl{ProductRepository}
 }
-
-
 
 func (h *productControl) FindProducts(c echo.Context) error {
 	products, err := h.ProductRepository.FindProduct()
@@ -43,9 +42,19 @@ func (h *productControl) GetProducts(c echo.Context) error {
 }
 
 func (h *productControl) CreateProduct(c echo.Context) error {
-	request := new(dto.CreateProductRequest)
-	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	// get the datafile here
+	dataFile := c.Get("dataFile").(string)
+	fmt.Println("this is data file", dataFile)
+
+	price, _ := strconv.Atoi(c.FormValue("price"))
+	stock, _ := strconv.Atoi(c.FormValue("stock"))
+
+	request := dto.CreateProductRequest{
+		Name:        c.FormValue("name"),
+		Description: c.FormValue("desc"),
+		Price:       price,
+		Photo:       dataFile,
+		Stock:       stock,
 	}
 
 	validation := validator.New()
