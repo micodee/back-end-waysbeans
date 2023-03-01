@@ -37,7 +37,7 @@ func (h *userControl) GetUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convertResponse(user)})
+	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convUser(user)})
 }
 
 func (h *userControl) CreateUser(c echo.Context) error {
@@ -64,7 +64,7 @@ func (h *userControl) CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)})
+	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convUser(data)})
 }
 
 func (h *userControl) UpdateUser(c echo.Context) error {
@@ -98,7 +98,7 @@ func (h *userControl) UpdateUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)})
+	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convUser(data)})
 }
 
 func (h *userControl) DeleteUser(c echo.Context) error {
@@ -114,10 +114,10 @@ func (h *userControl) DeleteUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)})
+	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convUser(data)})
 }
 
-func convertResponse(u models.User) dto.UserResponse {
+func convUser(u models.User) dto.UserResponse {
 	return dto.UserResponse{
 		ID:       u.ID,
 		Name:     u.Name,
