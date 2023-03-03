@@ -6,7 +6,6 @@ type CreateProductRequest struct {
 	Description string `json:"description" form:"desc" validate:"required"`
 	Stock       int    `json:"stock" form:"stock" validate:"required"`
 	Photo       string `json:"photo" form:"photo" validate:"required"`
-	UserID     int    `json:"user_id" validate:"required"`
 }
 
 type UpdateProductRequest struct {
