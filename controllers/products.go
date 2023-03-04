@@ -14,42 +14,52 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// SETUP CONTROL STRUCT
 type productControl struct {
 	ProductRepository repositories.ProductRepository
 }
 
+// SETUP CONTROL FUNCTION
 func ControlProduct(ProductRepository repositories.ProductRepository) *productControl {
 	return &productControl{ProductRepository}
 }
 
+// FUNCTION FIND PRODUCTS
 func (h *productControl) FindProducts(c echo.Context) error {
 	products, err := h.ProductRepository.FindProduct()
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: products})
 }
 
+
+
+// FUNCTION GET PRODUCT BY ID
 func (h *productControl) GetProducts(c echo.Context) error {
+	// get url param ID
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	products, err := h.ProductRepository.GetProducts(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(products)})
 }
 
+
+
+// FUNCTION CREATE PRODUCT
 func (h *productControl) CreateProduct(c echo.Context) error {
-	// get the datafile here
+	// get file IMAGE
 	dataFile := c.Get("dataFile").(string)
 	fmt.Println("this is data file", dataFile)
 
+	// convert request STRING TO INT
 	price, _ := strconv.Atoi(c.FormValue("price"))
 	stock, _ := strconv.Atoi(c.FormValue("stock"))
 
+	// get request
 	request := dto.CreateProductRequest{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("desc"),
@@ -58,16 +68,18 @@ func (h *productControl) CreateProduct(c echo.Context) error {
 		Stock:       stock,
 	}
 
+	// validate request input
 	validation := validator.New()
 	err := validation.Struct(request)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
+	// get user FROM JWT TOKEN
 	userLogin := c.Get("userLogin")
 	userId := userLogin.(jwt.MapClaims)["id"].(float64)
 
-	// data form pattern submit to pattern entity db product
+	// submit TO DATABASE tb PRODUCTS
 	product := models.Product{
 		Name:        request.Name,
 		Price:       request.Price,
@@ -77,28 +89,34 @@ func (h *productControl) CreateProduct(c echo.Context) error {
 		UserID:      int(userId),
 	}
 
+	// run REPOSITORY create product
 	data, err := h.ProductRepository.CreateProduct(product)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
 }
 
+
+
+// FUNCTION UPDATE PRODUCT
 func (h *productControl) UpdateProduct(c echo.Context) error {
+	// request data product
 	request := new(dto.UpdateProductRequest)
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
+	// get url param ID
 	id, _ := strconv.Atoi(c.Param("id"))
 
+	// run REPOSITORY get products
 	product, err := h.ProductRepository.GetProducts(id)
-
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
+	// check update value = jika request name tidak sama dengan null maka tetap menggunakan value sebelumnya
 	if request.Name != "" {
 		product.Name = request.Name
 	}
@@ -115,30 +133,36 @@ func (h *productControl) UpdateProduct(c echo.Context) error {
 		product.Photo = request.Photo
 	}
 
+	// run REPOSITORY update product
 	data, err := h.ProductRepository.UpdateProduct(product, id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
 }
 
+
+
+// FUNCTION DELETE PRODUCT
 func (h *productControl) DeleteProduct(c echo.Context) error {
+	// get url param ID
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	user, err := h.ProductRepository.GetProducts(id)
+		// run REPOSITORY get products
+	product, err := h.ProductRepository.GetProducts(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	data, err := h.ProductRepository.DeleteProduct(user, id)
+	// run REPOSITORY delete product
+	data, err := h.ProductRepository.DeleteProduct(product, id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
 }
 
+// write response product
 func convProduct(u models.Product) models.ProductResponse {
 	return models.ProductResponse{
 		Name:        u.Name,
