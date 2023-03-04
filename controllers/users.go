@@ -25,7 +25,6 @@ func (h *userControl) FindUsers(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: users})
 }
 
@@ -123,5 +122,7 @@ func convUser(u models.User) dto.UserResponse {
 		Name:     u.Name,
 		Email:    u.Email,
 		Password: u.Password,
+		Profile:  u.Profile,
+		Products: u.Products,
 	}
 }

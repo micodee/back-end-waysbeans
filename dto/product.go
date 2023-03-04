@@ -11,7 +11,7 @@ type CreateProductRequest struct {
 type UpdateProductRequest struct {
 	Name        string `json:"name" form:"name"`
 	Price       int    `json:"price" form:"price"`
-	Description string `json:"description" form:"description"`
+	Description string `json:"description" form:"desc"`
 	Stock       int    `json:"stock" form:"stock"`
 	Photo       string `json:"photo" form:"photo"`
 }

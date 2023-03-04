@@ -101,9 +101,13 @@ func (h *productControl) CreateProduct(c echo.Context) error {
 
 // FUNCTION UPDATE PRODUCT
 func (h *productControl) UpdateProduct(c echo.Context) error {
+		// get file IMAGE
+		dataFile := c.Get("dataFile").(string)
+		fmt.Println("update files success", dataFile)
+
 	// request data product
 	request := new(dto.UpdateProductRequest)
-	if err := c.Bind(&request); err != nil {
+	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
@@ -129,8 +133,9 @@ func (h *productControl) UpdateProduct(c echo.Context) error {
 	if request.Stock != 0 {
 		product.Stock = request.Stock
 	}
-	if request.Photo != "" {
-		product.Photo = request.Photo
+	if dataFile != "" {
+		product.Photo = dataFile
+		
 	}
 
 	// run REPOSITORY update product
