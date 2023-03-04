@@ -11,6 +11,7 @@ func RunMigration() {
 		&models.Product{},
 		&models.User{},
 		&models.Profile{},
+		&models.Cart{},
 	)
 
 	if err != nil {
