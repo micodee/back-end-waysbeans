@@ -60,7 +60,6 @@ func (h *profileControl) CreateProfile(c echo.Context) error {
 	// data form pattern submit to pattern entity db profile
 	profile := models.Profile{
 		Phone:   request.Phone,
-		Gender:  request.Gender,
 		Address: request.Address,
 		UserID:  int(userId),
 	}
@@ -77,7 +76,6 @@ func convProfile(u models.Profile) dto.ProfileResponse {
 	return dto.ProfileResponse{
 		ID:      u.ID,
 		Phone:   u.Phone,
-		Gender:  u.Gender,
 		Address: u.Address,
 		UserID:  u.UserID,
 		User:    u.User,
