@@ -6,6 +6,7 @@ import (
 	"waysbeans/dto"
 	"waysbeans/dto/result"
 	"waysbeans/models"
+	"waysbeans/pkg/bcrypt"
 	"waysbeans/repositories"
 
 	"github.com/go-playground/validator"
@@ -75,7 +76,11 @@ func (h *userControl) UpdateUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	user, err := h.UserRepository.GetUser(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	}
 
+	password, err := bcrypt.HashingPassword(request.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
@@ -89,7 +94,7 @@ func (h *userControl) UpdateUser(c echo.Context) error {
 	}
 
 	if request.Password != "" {
-		user.Password = request.Password
+		user.Password = password
 	}
 
 	data, err := h.UserRepository.UpdateUser(user, id)

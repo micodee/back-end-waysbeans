@@ -33,21 +33,18 @@ func (h *productControl) FindProducts(c echo.Context) error {
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: products})
 }
 
-
-
 // FUNCTION GET PRODUCT BY ID
 func (h *productControl) GetProducts(c echo.Context) error {
 	// get url param ID
 	id, _ := strconv.Atoi(c.Param("id"))
 
+	// repository get product
 	products, err := h.ProductRepository.GetProducts(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(products)})
 }
-
-
 
 // FUNCTION CREATE PRODUCT
 func (h *productControl) CreateProduct(c echo.Context) error {
@@ -97,13 +94,11 @@ func (h *productControl) CreateProduct(c echo.Context) error {
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
 }
 
-
-
 // FUNCTION UPDATE PRODUCT
 func (h *productControl) UpdateProduct(c echo.Context) error {
-		// get file IMAGE
-		dataFile := c.Get("dataFile").(string)
-		fmt.Println("update files success", dataFile)
+	// get file IMAGE
+	dataFile := c.Get("dataFile").(string)
+	fmt.Println("update files success", dataFile)
 
 	// request data product
 	request := new(dto.UpdateProductRequest)
@@ -135,7 +130,7 @@ func (h *productControl) UpdateProduct(c echo.Context) error {
 	}
 	if dataFile != "" {
 		product.Photo = dataFile
-		
+
 	}
 
 	// run REPOSITORY update product
@@ -146,14 +141,12 @@ func (h *productControl) UpdateProduct(c echo.Context) error {
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: convProduct(data)})
 }
 
-
-
 // FUNCTION DELETE PRODUCT
 func (h *productControl) DeleteProduct(c echo.Context) error {
 	// get url param ID
 	id, _ := strconv.Atoi(c.Param("id"))
 
-		// run REPOSITORY get products
+	// run REPOSITORY get products
 	product, err := h.ProductRepository.GetProducts(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
@@ -168,8 +161,8 @@ func (h *productControl) DeleteProduct(c echo.Context) error {
 }
 
 // write response product
-func convProduct(u models.Product) models.ProductResponse {
-	return models.ProductResponse{
+func convProduct(u models.Product) dto.ProductResponse {
+	return dto.ProductResponse{
 		Name:        u.Name,
 		Price:       u.Price,
 		Description: u.Description,

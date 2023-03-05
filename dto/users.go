@@ -5,12 +5,12 @@ import (
 )
 
 type UserResponse struct {
-	ID       int                          `json:"id"`
-	Name     string                       `json:"fullName" form:"name" validate:"required"`
-	Email    string                       `json:"email" form:"email" validate:"required"`
-	Password string                       `json:"password" form:"password" validate:"required"`
-	Profile  models.ProfileResponse              `json:"profile"`
-	Products []models.ProductUserResponse `json:"products"`
+	ID       int                    `json:"id"`
+	Name     string                 `json:"fullName"`
+	Email    string                 `json:"email"`
+	Password string                 `json:"password"`
+	Profile  models.ProfileToUser   `json:"profile"`
+	Products []models.ProductToUser `json:"products"`
 }
 
 type CreateUserRequest struct {
