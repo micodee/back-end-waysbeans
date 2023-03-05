@@ -51,7 +51,6 @@ func (h *handlerAuth) Register(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: data})
 }
 

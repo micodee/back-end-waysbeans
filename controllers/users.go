@@ -121,8 +121,5 @@ func convUser(u models.User) dto.UserResponse {
 		ID:       u.ID,
 		Name:     u.Name,
 		Email:    u.Email,
-		Password: u.Password,
-		Profile:  u.Profile,
-		Products: u.Products,
 	}
 }
