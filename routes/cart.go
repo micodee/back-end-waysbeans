@@ -13,4 +13,5 @@ func CartRoutes(e *echo.Group) {
 	h := controllers.ControlCart(cartRepository)
 
 	e.GET("/cart", h.FindCarts)
+	e.GET("/cart/:id", h.GetCart)
 }

@@ -9,6 +9,7 @@ type User struct {
 	Password  string          `json:"password" gorm:"type: varchar(255)"`
 	Profile   ProfileToUser   `json:"profile"`
 	Products  []ProductToUser `json:"products"`
+	Cart      []CartToUser    `json:"cart"`
 	CreatedAt time.Time       `json:"-"`
 	UpdatedAt time.Time       `json:"-"`
 }
