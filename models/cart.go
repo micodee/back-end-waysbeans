@@ -3,7 +3,7 @@ package models
 type Cart struct {
 	ID        int           `json:"id" gorm:"primary_key:auto_increment"`
 	UserID    int           `json:"user_id"`
-	User      UsersToCart `json:"user"`
+	User      UsersToCart   `json:"user"`
 	ProductID int           `json:"product_id" gorm:"type: int"`
 	Product   ProductToCart `json:"product"`
 	Qty       int           `json:"order_qty" gorm:"type: int"`
