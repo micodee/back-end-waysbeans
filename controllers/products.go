@@ -168,8 +168,8 @@ func (h *productControl) DeleteProduct(c echo.Context) error {
 }
 
 // write response product
-func convProduct(u models.Product) models.ProductResponse {
-	return models.ProductResponse{
+func convProduct(u models.Product) dto.ProductResponse {
+	return dto.ProductResponse{
 		Name:        u.Name,
 		Price:       u.Price,
 		Description: u.Description,

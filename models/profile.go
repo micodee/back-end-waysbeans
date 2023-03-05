@@ -7,7 +7,7 @@ type Profile struct {
 	Phone     string        `json:"phone" gorm:"type: varchar(255)"`
 	Address   string        `json:"address" gorm:"type: text"`
 	UserID    int           `json:"user_id"`
-	User      UsersRelation `json:"user"`
+	User      UsersToProfile `json:"user"`
 	CreatedAt time.Time     `json:"-"`
 	UpdatedAt time.Time     `json:"-"`
 }

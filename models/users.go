@@ -8,17 +8,33 @@ type User struct {
 	Email     string                `json:"email" gorm:"type: varchar(255)"`
 	Password  string                `json:"password" gorm:"type: varchar(255)"`
 	Profile   ProfileRelation       `json:"profile"`
-	Products  []ProductUserResponse `json:"products"`
-	Cart      []CartUserResponse    `json:"cart"`
 	CreatedAt time.Time             `json:"-"`
 	UpdatedAt time.Time             `json:"-"`
 }
 
-type UsersRelation struct {
+type UsersToProfile struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
-func (UsersRelation) TableName() string {
+type UsersToProduct struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+type UsersToCart struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+func (UsersToProfile) TableName() string {
+	return "users"
+}
+
+func (UsersToProduct) TableName() string {
+	return "users"
+}
+
+func (UsersToCart) TableName() string {
 	return "users"
 }
