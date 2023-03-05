@@ -11,7 +11,6 @@ type Product struct {
 	Photo       string          `json:"photo" gorm:"type: varchar(255)"`
 	UserID      int             `json:"user_id" form:"user_id"`
 	User        UsersRelation   `json:"user"`
-	CartID      int             `json:"cart_id" form:"cart_id"`
 	Cart        []CartToProduct `json:"cart"`
 	CreatedAt   time.Time       `json:"created_at"`
 	UpdatedAt   time.Time       `json:"updated_at"`
@@ -31,8 +30,6 @@ type ProductToCart struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Price       int    `json:"price"`
-	Description string `json:"description"`
-	Photo       string `json:"photo"`
 	Stock       int    `json:"stock"`
 }
 
