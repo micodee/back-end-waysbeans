@@ -27,10 +27,10 @@ type ProductToUser struct {
 }
 
 type ProductToCart struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	Price       int    `json:"price"`
-	Stock       int    `json:"stock"`
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+	Stock int    `json:"stock"`
 }
 
 func (ProductToUser) TableName() string {

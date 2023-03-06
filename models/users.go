@@ -7,6 +7,7 @@ type User struct {
 	Name      string          `json:"fullname" gorm:"type: varchar(255)"`
 	Email     string          `json:"email" gorm:"type: varchar(255)"`
 	Password  string          `json:"password" gorm:"type: varchar(255)"`
+	Role      string          `json:"role" gorm:"type: varchar(255)"`
 	Profile   ProfileToUser   `json:"profile"`
 	Products  []ProductToUser `json:"products"`
 	Cart      []CartToUser    `json:"cart"`

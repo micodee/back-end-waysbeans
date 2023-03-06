@@ -90,8 +90,7 @@ func (h *profileControl) UpdateProfile(c echo.Context) error {
 	}
 
 	// get user FROM JWT TOKEN
-	userLogin := c.Get("userLogin")
-	userId := userLogin.(jwt.MapClaims)["id"].(float64)
+	userId := c.Get("userLogin").(jwt.MapClaims)["id"].(float64)
 
 	// run REPOSITORY get profile
 	profile, err := h.ProfileRepository.GetProfile(int(userId))

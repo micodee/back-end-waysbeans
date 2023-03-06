@@ -144,16 +144,20 @@ func (h *productControl) UpdateProduct(c echo.Context) error {
 // FUNCTION DELETE PRODUCT
 func (h *productControl) DeleteProduct(c echo.Context) error {
 	// get url param ID
-	id, _ := strconv.Atoi(c.Param("id"))
+	// id, _ := strconv.Atoi(c.Param("id"))
+
+	// get user FROM JWT TOKEN
+	userLogin := c.Get("userLogin")
+	userId := userLogin.(jwt.MapClaims)["id"].(float64)
 
 	// run REPOSITORY get products
-	product, err := h.ProductRepository.GetProducts(id)
+	product, err := h.ProductRepository.GetProducts(int(userId))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
 	// run REPOSITORY delete product
-	data, err := h.ProductRepository.DeleteProduct(product, id)
+	data, err := h.ProductRepository.DeleteProduct(product)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, result.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()})
 	}

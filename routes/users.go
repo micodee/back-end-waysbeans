@@ -2,6 +2,7 @@ package routes
 
 import (
 	"waysbeans/controllers"
+	"waysbeans/pkg/middleware"
 	"waysbeans/pkg/mysql"
 	"waysbeans/repositories"
 
@@ -12,9 +13,8 @@ func UserRoutes(e *echo.Group) {
 	userRepository := repositories.RepositoryUser(mysql.ConnDB)
 	h := controllers.ControlUser(userRepository)
 
-	e.GET("/users", h.FindUsers)
-	e.GET("/user/:id", h.GetUser)
-	e.POST("/user", h.CreateUser)
-	e.PATCH("/user/:id", h.UpdateUser)
-	e.DELETE("/user/:id", h.DeleteUser)
+	e.GET("/users", middleware.Auth(h.FindUsers))
+	e.GET("/user/:id", middleware.Auth(h.GetUser))
+	e.PATCH("/user", middleware.Auth(h.UpdateUser))
+	e.DELETE("/user/:id", middleware.Auth(h.DeleteUser))
 }
