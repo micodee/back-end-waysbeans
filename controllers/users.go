@@ -16,11 +16,15 @@ import (
 // SETUP CONTROL STRUC
 type userControl struct {
 	UserRepository repositories.UserRepository
+	AuthRepository repositories.AuthRepository
 }
 
 // SETUP CONTROL FUNCTION
-func ControlUser(UserRepository repositories.UserRepository) *userControl {
-	return &userControl{UserRepository}
+func ControlUser(UserRepository repositories.UserRepository, AuthRepository repositories.AuthRepository) *userControl {
+	return &userControl{
+		UserRepository: UserRepository,
+		AuthRepository: AuthRepository,
+	}
 }
 
 // FUNCTION FIND USER
@@ -47,6 +51,15 @@ func (h *userControl) UpdateUser(c echo.Context) error {
 	request := new(dto.UpdateUserRequest)
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	}
+
+	// check if email is exist
+	checkUserMail, err := h.AuthRepository.Login(request.Email)
+	if err != nil && (err.Error() != "record not found") {
+		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+	}
+	if checkUserMail.ID != 0 {
+		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: "Email already exists"})
 	}
 
 	// get user FROM JWT TOKEN
@@ -104,7 +117,5 @@ func convUser(u models.User) dto.UserResponse {
 		Name:     u.Name,
 		Email:    u.Email,
 		Password: u.Password,
-		Profile:  u.Profile,
-		Products: u.Products,
 	}
 }

@@ -11,7 +11,8 @@ import (
 
 func UserRoutes(e *echo.Group) {
 	userRepository := repositories.RepositoryUser(mysql.ConnDB)
-	h := controllers.ControlUser(userRepository)
+	AuthRepository := repositories.RepositoryAuth(mysql.ConnDB)
+	h := controllers.ControlUser(userRepository, AuthRepository)
 
 	e.GET("/users", middleware.Auth(middleware.Admin(h.FindUsers)))
 	e.GET("/user/:id", middleware.Auth(middleware.Admin(h.GetUser)))

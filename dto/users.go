@@ -1,16 +1,10 @@
 package dto
 
-import (
-	"waysbeans/models"
-)
-
 type UserResponse struct {
 	ID       int                    `json:"id"`
 	Name     string                 `json:"fullName"`
 	Email    string                 `json:"email"`
 	Password string                 `json:"password"`
-	Profile  models.ProfileToUser   `json:"profile"`
-	Products []models.ProductToUser `json:"products"`
 }
 
 type CreateUserRequest struct {
