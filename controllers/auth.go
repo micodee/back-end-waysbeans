@@ -47,10 +47,20 @@ func (h *handlerAuth) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
 
+	// create role
 	var role = "user"
 	if request.IsAdmin {
 		role = "admin"
 	}
+
+		// check if email is exist
+		checkUserMail, err := h.AuthRepository.Login(request.Email)
+		if err != nil && (err.Error() != "record not found") {
+			return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
+		}
+		if checkUserMail.ID != 0 {
+			return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: "Email already exists"})
+		}
 
 	// give value to struct models user
 	user := models.User{
@@ -68,12 +78,15 @@ func (h *handlerAuth) Register(c echo.Context) error {
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: ResponAuth(register)})
 }
 
+
+
+
 func (h *handlerAuth) Login(c echo.Context) error {
+	// get request form input
 	request := new(dto.LoginRequest)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()})
 	}
-
 	user := models.User{
 		Email:    request.Email,
 		Password: request.Password,
@@ -91,9 +104,10 @@ func (h *handlerAuth) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, result.ErrorResult{Status: http.StatusBadRequest, Message: "wrong email or password"})
 	}
 
-	// generate token
+	// generate token create interface
 	claims := jwt.MapClaims{}
 	claims["id"] = user.ID
+	claims["role"] = user.Role
 	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // 2 hours expired
 
 	token, errGenerateToken := jwtToken.GenerateToken(&claims)
@@ -112,7 +126,7 @@ func (h *handlerAuth) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, result.SuccessResult{Status: http.StatusOK, Data: loginResponse})
 }
 
-// write response product
+// auth respon
 func ResponAuth(u models.User) dto.RegisterRespon {
 	return dto.RegisterRespon{
 		Name:     u.Name,

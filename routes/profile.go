@@ -13,7 +13,7 @@ func ProfileRoutes(e *echo.Group) {
 	profileRepository := repositories.RepositoryProfile(mysql.ConnDB)
 	h := controllers.ControlProfile(profileRepository)
 
-	e.GET("/profiles", middleware.Auth(h.FindProfile))
+	e.GET("/profiles", middleware.Auth(middleware.Admin(h.FindProfile)))
 	e.GET("/profile/:id", middleware.Auth(h.GetProfile))
 	e.POST("/profile", middleware.Auth(h.CreateProfile))
 	e.PATCH("/profile", middleware.Auth(h.UpdateProfile))
